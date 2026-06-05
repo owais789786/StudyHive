@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Dosis:wght@200..800&family=Istok+Web:ital,wght@0,400;0,700;1,400;1,700&family=Sniglet:wght@400;800&display=swap');
+
+@import 'tailwindcss';
+
+/* Hide scrollbar but keep functionality */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Opera */
+}
+
+@layer base {
+  :root {
+    --clr-primary: #7F77DD;
+    --clr-secondary: #262624;
+    --clr-grey1: #30302E;
+    --clr-grey2: #C2C0B6;
+    --clr-pink: #EEEDFE;
+
+  }
+
+  a {
+    color: inherit;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@theme {
+  --color-primary: #7F77DD;
+  --color-secondary: #262624;
+  --color-grey1: #30302E;
+  --color-grey2: #C2C0B6;
+  --color-pink: #EEEDFE;
+  --breakpoint-xs: 480px;
+
+}
+
+
+@utility font-dancing {
+  font-family: 'Dancing Script', cursive;
+}
+
+@utility font-dosis {
+  font-family: 'Dosis', sans-serif;
+}
+
+@utility font-sniglet {
+  font-family: 'sniglet', sans-serif;
+}
