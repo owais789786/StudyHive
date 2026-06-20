@@ -6,6 +6,7 @@ import { showError, showSuccess } from '../utils/toast';
 
 // RoomCard.jsx
 const RoomCard = () => {
+
     const room = {
         name: "Owais's Room",
         tags: ["Study", "Coding", "Physics"],
