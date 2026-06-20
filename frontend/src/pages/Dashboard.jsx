@@ -34,7 +34,7 @@ const Dashboard = () => {
 
         <ul className='divide-pink/10 divide-y border-y border-pink/10  mt-8 '>
           {sidebarItems.map(item => (
-            <li className='text-primary px-2 transition-colors hover:bg-pink/10 font-sniglet py-2 flex  items-center'>
+            <li key={item.name} className='text-primary px-2 transition-colors hover:bg-pink/10 font-sniglet py-2 flex  items-center'>
               <span className='pr-2'>
                 <i className={item.icon}></i>
               </span>

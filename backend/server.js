@@ -11,12 +11,15 @@ const io = new Server(httpServer, {
     }
 })
 
-io.on('connection', (socket) => {
-    console.log('user connected:', socket.id);
-
+io.on('connection',(socket)=>{
+    console.log('user connected:' ,socket.id);
+    
 })
 
 connectDB.then(() => {
+    httpServer.listen(process.env.PORT, ()=>{
+        console.log(`Server is running at port: ${process.env.PORT}`)
+    })
 
 }).catch(error => {
     console.log("Failed to start server :" + error);

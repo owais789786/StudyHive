@@ -14,7 +14,7 @@ const Login = () => {
             const email = formData.get('email')
             const password = formData.get('password')
             let result;
-            // API call ya koi bhi logic
+            
             try {
                 const res = await fetch(baseApi, {
                     method: 'POST',
