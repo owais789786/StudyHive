@@ -11,6 +11,4 @@ const validateLogin = [
     body('password').notEmpty().isLength({ min: 5 }).withMessage('Password must be 5 characters long')
 ];
 
-
-
 module.exports = { validateRegistration, validateLogin };
