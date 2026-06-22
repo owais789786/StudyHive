@@ -4,7 +4,6 @@ const BlackListedToken = require('../models/blackListed.model');
 const logger = require('../utils/logger');
 
 const signupHanlder = async (req, res) => {
-      console.log("request ai")
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({

@@ -1,10 +1,12 @@
 import React, { useState, useActionState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 
+
 const ChatRoom = () => {
 
     const [showCreateRoom, setShowCreateRoom] = useState(false);
     const [selectedOption, setSelectedOption] = useState('public');
+    const [activeFellow, setActiveFellow] = useState(null);
     const chatOP = [
         { name: 'Rooms', id: 'rooms' },
         { name: 'Fellows', id: 'fellows' },
@@ -80,8 +82,8 @@ const ChatRoom = () => {
                                 <div className='text-pink items-start flex flex-col gap-3 row-span-2 h-full col-span-6 xs:col-span-3 md:col-span-2'>
                                     <label htmlFor="roomDesc" className='font-dosis'>Description:</label>
                                     <textarea
-                                         // Default safe rows
-                                         rows={1}
+                                        // Default safe rows
+                                        rows={1}
                                         className='bg-pink/10 py-2 px-2 rounded-lg font-sniglet outline-transparent outline transition-all w-full h-full  focus:outline-primary appearance-none'
                                         placeholder='For study...'
                                         name='roomDesc'
@@ -111,9 +113,9 @@ const ChatRoom = () => {
                                 </div>
 
                             </form>
-                          <div className='pt-10 pl-4 flex w-full justify-center'>
-                             <button className={`border-white/30 border transition-all py-2 px-3 rounded-xl hover:opacity-80 duration-200 cursor-pointer text-pink bg-primary hover:bg-transparent `}>Create</button>
-                          </div>
+                            <div className='pt-10 pl-4 flex w-full justify-center'>
+                                <button className={`border-white/30 border transition-all py-2 px-3 rounded-xl hover:opacity-80 duration-200 cursor-pointer text-pink bg-primary hover:bg-transparent `}>Create</button>
+                            </div>
 
                         </motion.div>
                     }
@@ -121,6 +123,79 @@ const ChatRoom = () => {
                         <motion.div>
 
                         </motion.div>
+                    }
+                   
+            {showOP === 'fellows' && (
+            <div className="flex w-full h-[calc(100vh-120px)] overflow-hidden">
+
+                {/* LEFT SIDE: Fellows List */}
+                {/* Mobile par tabhi dikhegi jab koi activeFellow selected NAHI hoga */}
+                <div className={`w-full md:w-1/3 border-r border-pink/10 flex flex-col ${activeFellow ? 'hidden md:flex' : 'flex'}`}>
+                    <div className="p-3 border-b border-pink/10 text-pink/60 text-sm">
+                        Your Fellows
+                    </div>
+                    <div className="flex-1 overflow-y-auto JSON-list">
+                        {/* Sample Fellows Loop */}
+                        {['Ali', 'Zain', 'Hamza'].map((fellow) => (
+                            <button
+                                key={fellow}
+                                onClick={() => setActiveFellow(fellow)}
+                                className="w-full text-left px-4 py-3 text-pink hover:bg-pink/5 border-b border-pink/5 transition-colors flex items-center gap-3"
+                            >
+                                <div className="w-8 h-8 rounded-full bg-primary/30 flex items-center justify-center text-xs">
+                                    {fellow[0]}
+                                </div>
+                                <span>{fellow}</span>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* RIGHT SIDE: Actual Chat Window */}
+                {/* Mobile par tabhi dikhegi jab koi activeFellow select HO JAYEGA */}
+                <div className={`w-full md:w-2/3 flex flex-col bg-[#101828]/30 ${activeFellow ? 'flex' : 'hidden md:flex'}`}>
+                    {activeFellow ? (
+                        <div className="flex flex-col h-full">
+                            {/* Chat Header */}
+                            <div className="p-4 border-b border-pink/10 flex items-center gap-3 bg-pink/2">
+                                {/* BACK BUTTON: Sirf mobile par dikhega taake user wapas list par ja sakay */}
+                                <button
+                                    onClick={() => setActiveFellow(null)}
+                                    className="md:hidden text-pink mr-2 cursor-pointer text-lg"
+                                >
+                                    <i className="fa-solid fa-arrow-left"></i>
+                                </button>
+                                <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-sm font-bold text-white">
+                                    {activeFellow[0]}
+                                </div>
+                                <span className="text-pink font-semibold">{activeFellow}</span>
+                            </div>
+
+                            {/* Chat Messages Area */}
+                            <div className="flex-1 p-4 overflow-y-auto text-pink/70 text-sm">
+                                {/* Messages breakdown goes here */}
+                                <p className="text-center text-pink/20 my-4">Conversation started with {activeFellow}</p>
+                            </div>
+
+                            {/* Chat Input */}
+                            <div className="p-3 border-t border-pink/10 flex gap-2">
+                                <input type="text" placeholder="Type a message..." className="bg-pink/10 py-2 px-3 rounded-lg font-sniglet text-pink outline-none flex-1 focus:ring-1 focus:ring-primary" />
+                                <button className="bg-primary text-pink px-4 rounded-lg"><i className="fa-solid fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                    ) : (
+                        /* Empty State: Sirf Desktop par dikhega jab tak koi chat select na ho */
+                        <div className="hidden md:flex flex-1 flex-col items-center justify-center text-pink/30">
+                            <i className="fa-regular fa-comments text-4xl mb-2"></i>
+                            <p className="font-sniglet">Select a fellow to start chatting</p>
+                        </div>
+                    )}
+                </div>
+
+            </div>
+        )}
+ {
+                        showOP == 'fellow' && <Fellow />
                     }
                 </AnimatePresence>
 
