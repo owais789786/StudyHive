@@ -4,6 +4,7 @@ import { useState, useEffect, useContext } from 'react';
 import { UserContext } from './context/UserContext';
 import { AnimatePresence } from 'motion/react';
 import { Toaster } from 'react-hot-toast'
+import { ErrorBoundary } from "react-error-boundary";
 
 import Navbar from './components/Navbar'
 import Features from './components/Features'
@@ -14,6 +15,22 @@ import Loading from './pages/Loading';
 import { PublicRoutes } from './routes/PublicRoutes';
 import { ProtectedRoutes } from './routes/protectedRoutes';
 import Dashboard from './pages/Dashboard';
+
+
+function ErrorFallback({ error, resetErrorBoundary }) {
+  return (
+    <div className="p-4 border border-red-500 bg-red-50 text-red-700 rounded-md m-4">
+      <h2 className="text-lg font-bold">Upps! Signup screen mn koi masla aya hy.</h2>
+      <p className="text-sm font-mono mt-2">{error.message}</p>
+      <button
+        onClick={resetErrorBoundary}
+        className="mt-3 px-4 py-2 bg-red-600 text-white text-xs rounded hover:bg-red-700"
+      >
+        Dobara Try Karo
+      </button>
+    </div>
+  );
+}
 
 
 const App = () => {
@@ -71,7 +88,7 @@ const App = () => {
   }, [setLoading, location.pathname])
 
   return (
-    <div>
+    <div><ErrorBoundary>
       <Toaster position='top-right' />
       <AnimatePresence>
         {loading && <Loading />}
@@ -87,7 +104,7 @@ const App = () => {
         <Route path='/signup' element={<PublicRoutes><Signup /></PublicRoutes>} />
         <Route path='/login' element={<PublicRoutes><Login /></PublicRoutes>} />
         <Route path='/dashboard' element={<ProtectedRoutes><Dashboard /></ProtectedRoutes>} />
-      </Routes>
+      </Routes></ErrorBoundary>
     </div>
   )
 }

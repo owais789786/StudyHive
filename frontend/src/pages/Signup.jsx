@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react'
-import { useActionState, useContext } from 'react'
+import React, { useEffect,useActionState, useContext } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { UserContext } from '../context/UserContext'
 import { showSuccess, showError } from '../utils/toast'
 
 
+
+
 const Signup = () => {
+  
     const { loading, setLoading, user, setUser } = useContext(UserContext);
     const navigate = useNavigate();
     const location = useLocation();
@@ -40,8 +42,7 @@ const Signup = () => {
                 navigate(from, { replace: true })
 
             } catch (error) {
-
-                showError(result.message)
+                showError(error.message|| 'Failed to Signup')
             } finally {
                 setLoading(false)
             }
