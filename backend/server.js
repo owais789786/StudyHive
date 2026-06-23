@@ -25,7 +25,5 @@ connectDB.then(() => {
     console.log("Failed to start server :" + error);
 })
 
-httpServer.listen(process.env.PORT, () => {
-    console.log("server is running at port :" + process.env.PORT)
-})
+
 

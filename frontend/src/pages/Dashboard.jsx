@@ -21,7 +21,7 @@ const Dashboard = () => {
   ]
   return (
     <div className='w-full min-h-dvh md:pl-14 bg-[#140B2D] relative'>
-      <div className={`fixed z-40 transition-all duration-500 bg-[rgb(44,19,82)] w-full sm:w-1/2 h-full top-0 md:w-80 py-2 left-0 ${showSidebar ? 'translate-x-0' : 'md:translate-x-[-83%] -translate-x-full'}`}>
+      <div className={`fixed z-40 transition-all duration-500 bg-[rgb(44,19,82)]  w-full sm:w-1/2 h-full top-0 md:w-80 py-2 left-0 ${showSidebar ? 'translate-x-0' : 'md:translate-x-[-83%] -translate-x-full'}`}>
 
         <div className='flex justify-between px-2 items-center '>
           <div className='md:text-3xl text-xl flex  mt-4 pointer-events-none'>

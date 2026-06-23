@@ -2,6 +2,35 @@
 
 @import 'tailwindcss';
 
+/* Custom Classic Scrollbar with Purple & Dark Theme */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;  /* Sleek and thin width */
+  height: 6px; /* Horizontal scrollbar ke liye */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* Aapka main background color */
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #2C1352; /* Deep Purple Scrollbar Thumb */
+  border-radius: 10px;
+  /* Halka sa border track aur thumb mein separation ke liye */
+  border: 1px solid #110E1F; 
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #411d77; /* Hover karne par purple thoda bright ho jayega */
+  cursor: pointer;
+}
+
+/* Firefox Support */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #2C1352 transparent;
+}
+
 /* Hide scrollbar but keep functionality */
 .hide-scrollbar {
   -ms-overflow-style: none;
