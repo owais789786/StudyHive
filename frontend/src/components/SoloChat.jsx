@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'; // Standard import ya motion/react dono theek hain
 import ChatMessage from './ChatMessage';
+import ChatInput from './ChatInput';
 
 const SoloChat = () => {
     const name = [
@@ -74,7 +75,7 @@ const SoloChat = () => {
                 {(!isMobile || !showList) && (
                     <motion.div
                         key='chatbox'
-                        className='overflow-y-scroll flex-1 h-full overflow-x-hidden custom-scrollbar relative bg-[#0e0d22]'
+                        className='flex-1 h-full overflow-x-hidden bg-[#0e0d22]'
                         initial={isMobile ? { x: 300, opacity: 0 } : false}
                         animate={{ x: 0, opacity: 1 }}
                         exit={isMobile ? { x: 300, opacity: 0 } : undefined}
@@ -86,29 +87,28 @@ const SoloChat = () => {
                                 className='py-1 px-4 fixed text-lg text-pink font-dosis bg-pink/20 backdrop-blur-2xl border border-pink/10 rounded-full m-3 z-20'
                                 onClick={() => setShowList(true)}
                             >
-                                ← Back
+                                Back
                             </button>
                         )}
+                        <div className='border border-red-400 h-full flex flex-col overflow-hidden relative'>
+                            <div className=' flex-1 p-4 overflow-y-scroll custom-scrollbar '>
+                                <motion.div
+                                initial={{
+                                    y: 100
+                                }}
+                                 className='h-fit py-15'
+                                 >
+                                    <ChatMessage text={'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo delectus hic praesentium, officiis dicta voluptate laboriosam aperiam dignissimos ad accusamus? Nulla, ipsum dolorem. Obcaecati.'} isSender={true}  /> 
+                                    <ChatMessage text={'Ling elit. Nemo delectum dolorem. Obcaecati.'} isSender={false}  /> 
+                                    <ChatMessage text={'Ling elit. Nemo delectu'} isSender={true}  /> 
+                                    <ChatMessage text={'Ling elit. Nemo delectufdhvjkfd fdjh skjrdhg dhfkdgjhdf  gsfhdgjk dfhjghdjkfgdfbhkhfbfdjkh  jdf jdfh kj fdj df gjkdfjgk sdjfkh jsdfhk kjdhbsdfj md '} isSender={false}  /> 
+                                    <ChatMessage text={'Ling elit. Nemo delectufdhvjkfd fdjh skjrdhg dhfkdgjhdf  gsfhdgjk dfhjghdjkfgdfbhkhfbfdjkh  jdf jdfh kj fdj df gjkdfjgk sdjfkh jsdfhk kjdhbsdfj md '} isSender={false} senderName={'Oasis'}  /> 
+                                </motion.div>
 
-                        <div className='border border-pink'>
-                            <div className='w-full p-4 pt-16 sm:pt-4 overflowhidden relative'>
-                            <ChatMessage text={'This is a message'} isSender={true} />
-                            <ChatMessage senderName={'Owais'} text={'This is a message'} isSender={false} />
-                            <ChatMessage text={'This is a long message...'} isSender={false} />
-                            <ChatMessage text={'This is a long message...'} isSender={false} />
-                            <ChatMessage text={'This is a long message...'} isSender={false} />
-                            <ChatMessage text={'This is a long message...'} isSender={false} />
-                            <ChatMessage text={'This is a long message...'} isSender={false} />
-                            <ChatMessage text={'This is a long message...'} isSender={false} />
-                            <ChatMessage text={'This is a long message...'} isSender={true} />
-                            <ChatMessage text={'This is a long message...'} isSender={false} />
-                            <ChatMessage text={'This is a long message...'} isSender={false} />
-                            <ChatMessage text={'This is a long message...'} isSender={true} />
-                            <ChatMessage text={'This is a long message...'} isSender={false} />
+                            </div>
+                                <ChatInput />
+                        </div>
 
-                        </div>
-                            <input type="text" name="message" id="message" className='absolute bottom-2 left-0 transition-all p-1 bg-primary text-pink ' />
-                        </div>
                     </motion.div>
                 )}
 
