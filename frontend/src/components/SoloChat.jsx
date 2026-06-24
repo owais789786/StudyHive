@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'; // Standard import ya motion/react dono theek hain
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
@@ -26,6 +26,14 @@ const SoloChat = () => {
 
     const [showList, setShowList] = useState(true);
     const [isMobile, setIsMobile] = useState(false);
+    const scrollToLast = useRef(null)
+
+    const scrollToBottom = () => {
+        scrollToLast.current?.scrollIntoView({ behavior: "smooth" });
+    };
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
 
     // Screen size detect karne k liye taake mobile aur desktop ka behavior manage ho sake
     useEffect(() => {
@@ -90,23 +98,22 @@ const SoloChat = () => {
                                 Back
                             </button>
                         )}
-                        <div className='border border-red-400 h-full flex flex-col overflow-hidden relative'>
-                            <div className=' flex-1 p-4 overflow-y-scroll custom-scrollbar '>
+                        <div className=' h-full flex flex-col overflow-hidden relative'>
+                            <div className=' flex-1 p-4 overflow-y-scroll custom-scrollbar  '>
                                 <motion.div
-                                initial={{
-                                    y: 100
-                                }}
-                                 className='h-fit py-15'
-                                 >
-                                    <ChatMessage text={'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo delectus hic praesentium, officiis dicta voluptate laboriosam aperiam dignissimos ad accusamus? Nulla, ipsum dolorem. Obcaecati.'} isSender={true}  /> 
-                                    <ChatMessage text={'Ling elit. Nemo delectum dolorem. Obcaecati.'} isSender={false}  /> 
-                                    <ChatMessage text={'Ling elit. Nemo delectu'} isSender={true}  /> 
-                                    <ChatMessage text={'Ling elit. Nemo delectufdhvjkfd fdjh skjrdhg dhfkdgjhdf  gsfhdgjk dfhjghdjkfgdfbhkhfbfdjkh  jdf jdfh kj fdj df gjkdfjgk sdjfkh jsdfhk kjdhbsdfj md '} isSender={false}  /> 
-                                    <ChatMessage text={'Ling elit. Nemo delectufdhvjkfd fdjh skjrdhg dhfkdgjhdf  gsfhdgjk dfhjghdjkfgdfbhkhfbfdjkh  jdf jdfh kj fdj df gjkdfjgk sdjfkh jsdfhk kjdhbsdfj md '} isSender={false} senderName={'Oasis'}  /> 
+                                    className='h-fit pt-10 pb-15'
+                                >
+                                    <ChatMessage text={'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo delectus hic praesentium, officiis dicta voluptate laboriosam aperiam dignissimos ad accusamus? Nulla, ipsum dolorem. Obcaecati.'} isSender={true} />
+                                    <ChatMessage text={'Ling elit. Nemo delectum dolorem. Obcaecati.'} isSender={false} />
+                                    <ChatMessage text={'Ling elit. Nemo delectu'} isSender={true} />
+                                    <ChatMessage text={'Ling elit. Nemo delectufdhvjkfd fdjh skjrdhg dhfkdgjhdf  gsfhdgjk dfhjghdjkfgdfbhkhfbfdjkh  jdf jdfh kj fdj df gjkdfjgk sdjfkh jsdfhk kjdhbsdfj md '} isSender={false} />
+                                    <ChatMessage text={'Ling elit. Nemo delectufdhvjkfd fdjh skjrdhg dhfkdgjhdf  gsfhdgjk dfhjghdjkfgdfbhkhfbfdjkh  jdf jdfh kj fdj df gjkdfjgk sdjfkh jsdfhk kjdhbsdfj md '} isSender={false} senderName={'Oasis'} />
+
+                                    <div key={'scrollToLastMessage'} ref={'scrollToLast'}></div>
                                 </motion.div>
 
                             </div>
-                                <ChatInput />
+                            <ChatInput />
                         </div>
 
                     </motion.div>
