@@ -24,7 +24,7 @@ const AdvancedChatMessage = ({ text, timestamp, senderName, avatarUrl, isSender 
         
         {/* Sender name */}
         <span className={`text-xs mb-1 px-1 font-medium tracking-wide ${
-          isSender ? 'text-[#7F77DD]/70' : 'text-[#7F77DD]/60'
+          isSender ? 'text-primary/70' : 'text-primary/60'
         }`}>
           {isSender ? 'You' : senderName}
         </span>
@@ -40,7 +40,7 @@ const AdvancedChatMessage = ({ text, timestamp, senderName, avatarUrl, isSender 
           
           {/* Glass highlight for sender bubble */}
           {isSender && (
-            <div className="absolute inset-0 rounded-2xl rounded-tr-none bg-gradient-to-t from-transparent to-white/10 pointer-events-none" />
+            <div className="absolute inset-0 rounded-2xl rounded-tr-none bg-linear-to-t from-transparent to-white/10 pointer-events-none" />
           )}
         </div>
 

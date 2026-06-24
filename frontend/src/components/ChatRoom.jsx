@@ -139,7 +139,7 @@ const FormComponent = () => {
     );
 
     return (
-        <form action={formAction} className='sm:col-span-2 col-span-3 px-2 gap-5 grid-cols-6 grid w-full'>
+        <form action={formAction} className='sm:col-span-2 col-span-3 px-2 gap-5 grid-cols-6 grid h-fit w-full'>
             {/* 1. Room Name */}
             <div className='text-pink items-start flex flex-col gap-3 col-span-6 xs:col-span-3 md:col-span-3'>
                 <label htmlFor="roomName" className='font-dosis'>Room Name:</label>
@@ -216,7 +216,7 @@ const ChatRoom = () => {
     ];
 
     return (
-        <div className='h-[99.5vh] py-2 w-full px-1 flex flex-col items-center '>
+        <div className='h-dvh py-2 w-full px-1 flex flex-col items-center '>
 
 
             <div className='flex flex-col h-dvh w-full flex-1 items-center overflow-hidden  relative border-pink/10 border  rounded-2xl bg-[#101828]/50 max-w-310 '>
@@ -233,7 +233,7 @@ const ChatRoom = () => {
                     {/* Mobile Menu */}
                     <div className='text-pink xs:hidden my-3 flex border-transparent w-9 h-9 rounded-lg items-center justify-center  text-lg relative group bg-primary hover:bg-transparent hover:border-pink/20 border transition-all mr-2'>
                         <span className='cursor-pointer '><i className="fa-solid fa-bars"></i></span>
-                        <ul className='absolute top-full right-0 w-50 flex-col bg-[#242E71] rounded-xl overflow-hidden group-hover:opacity-100 opacity-0 transition-all pointer-events-none group-hover:pointer-events-auto font-sniglet'>
+                        <ul className='absolute top-full right-0 w-50 flex-col bg-[#242E71] rounded-xl overflow-hidden group-hover:opacity-100 opacity-0 transition-all pointer-events-none group-hover:pointer-events-auto font-sniglet z-50 '>
                             {chatOP.map(op => (
                                 <li className='flex' key={op.id}>
                                     <button className={`transition-all py-1 px-2 flex-1 hover:opacity-80 duration-200 cursor-pointer text-sm text-pink ${showOP === op.id ? 'bg-primary' : 'bg-transparent'}`} onClick={() => setShowOP(op.id)}>{op.name}</button>
@@ -247,12 +247,12 @@ const ChatRoom = () => {
                     {showOP === 'createRoom' && (
                         <motion.div
                             key="createRoom"
-                            className='flex w-full h-full pt-4 px-3 pb-3'
+                            className='flex w-full h-full  pt-4 px-3 pb-20'
                             exit={{ opacity: 0 }}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                         >
-                            <div className='grid sm:grid-cols-3 gap-5 w-full'>
+                            <div className='grid sm:grid-cols-3 gap-5 w-full overflow-y-scroll custom-scrollbar'>
                                 <FormComponent />
                                 <div className='sm:col-span-1 col-span-3 min-h-100 flex flex-1 bg-pink/5 rounded-xl'></div>
                             </div>
@@ -284,7 +284,7 @@ const ChatRoom = () => {
                             exit={{ opacity: 0 }}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            className="flex w-full flex-1 overflow-hidden"
+                            className="flex w-full flex-1 overflow-hidden relative"
                         >
                             <SoloChat />
                         </motion.div>
