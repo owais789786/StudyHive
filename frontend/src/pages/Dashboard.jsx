@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
-import ChatRoom from '../components/ChatRoom';
+import ChatRoom from './ChatRoom';
+
 
 const Dashboard = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -46,8 +47,9 @@ const Dashboard = () => {
         </ul>
 
       </div>
-      <ChatRoom />
-
+      <div className=' px-2 py-1 h-dvh flex'>
+        <ChatRoom />
+      </div>
     </div>
   )
 }

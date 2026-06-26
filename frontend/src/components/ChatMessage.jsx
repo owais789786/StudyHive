@@ -1,6 +1,6 @@
 import React from 'react';
 
-const AdvancedChatMessage = ({ text, timestamp, senderName, avatarUrl, isSender }) => {
+const ChatMessage = ({ text, timestamp, senderName, avatarUrl, isSender }) => {
   return (
     <div className={`flex w-full gap-3 mb-6 items-end ${isSender ? 'flex-row-reverse' : 'flex-row'}`}>
       
@@ -53,4 +53,4 @@ const AdvancedChatMessage = ({ text, timestamp, senderName, avatarUrl, isSender 
   );
 };
 
-export default AdvancedChatMessage;
+export default ChatMessage;

@@ -1,127 +1,126 @@
-import { useState, useEffect, useRef } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'; // Standard import ya motion/react dono theek hain
+import React, { useState, useEffect, useRef } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import ChatMessage from './ChatMessage';
-import ChatInput from './ChatInput';
 
 const SoloChat = () => {
-    const name = [
-        { n: 'Ali', lastMessage: 'I am A boy and I am a very good boy', lastOnline: '6:26' },
-        { n: 'Owais', lastMessage: 'I am A boy and I am a very good boy', lastOnline: '6:26' },
-        { n: 'Zeeshan', lastMessage: 'I am A boy and I am a very good boy', lastOnline: '6:26' },
-        { n: 'Hamza', lastMessage: 'I am A boy and I am a very good boy...', lastOnline: '6:26' },
-        { n: 'Hamza', lastMessage: 'I am A boy and I am a very good boy...', lastOnline: '6:26' },
-        { n: 'Hamza', lastMessage: 'I am A boy and I am a very good boy...', lastOnline: '6:26' },
-        { n: 'Hamza', lastMessage: 'I am A boy and I am a very good boy...', lastOnline: '6:26' },
-        { n: 'Hamza', lastMessage: 'I am A boy and I am a very good boy...', lastOnline: '6:26' },
-        { n: 'Hamza', lastMessage: 'I am A boy and I am a very good boy...', lastOnline: '6:26' },
-        { n: 'Hamza', lastMessage: 'I am A boy and I am a very good boy...', lastOnline: '6:26' },
-        { n: 'Hamza', lastMessage: 'I am A boy and I am a very good boy...', lastOnline: '6:26' },
-        { n: 'Hamza', lastMessage: 'I am A boy and I am a very good boy...', lastOnline: '6:26' },
-        { n: 'Hamza', lastMessage: 'I am A boy and I am a very good boy...', lastOnline: '6:26' },
-        { n: 'Hamza', lastMessage: 'I am A boy and I am a very good boy...', lastOnline: '6:26' },
-        { n: 'Hamza', lastMessage: 'I am A boy and I am a very good boy...', lastOnline: '6:26' },
-        { n: 'Hamza', lastMessage: 'I am A boy and I am a very good boy...', lastOnline: '6:26' },
-        { n: 'Hamza', lastMessage: 'I am A boy and I am a very good boy...', lastOnline: '6:26' },
-    ];
+  // Mobile par chat aur sidebar switch karne ke liye state (True = Chat Open, False = Sidebar Open)
+  const [showList, setShowList] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const messages = [1, 1, 1, 1, 1, 1, 1, 1, 1];
+  const scrollToLast = useRef(null)
 
-    const [showList, setShowList] = useState(true);
-    const [isMobile, setIsMobile] = useState(false);
-    const scrollToLast = useRef(null)
+  const scrollToBottom = () => {
+    scrollToLast.current?.scrollIntoView({ behavior: "smooth" });
+  };
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
-    const scrollToBottom = () => {
-        scrollToLast.current?.scrollIntoView({ behavior: "smooth" });
-    };
-    useEffect(() => {
-        scrollToBottom();
-    }, [messages]);
+  useEffect(() => {
+    const checkSize = () => setIsMobile(window.innerWidth < 640); // 640px se choti mobile screen
+    checkSize();
+    window.addEventListener('resize', checkSize);
+    return () => window.removeEventListener('resize', checkSize);
+  }, []);
 
-    // Screen size detect karne k liye taake mobile aur desktop ka behavior manage ho sake
-    useEffect(() => {
-        const checkSize = () => setIsMobile(window.innerWidth < 640); // 640px se choti mobile screen
-        checkSize();
-        window.addEventListener('resize', checkSize);
-        return () => window.removeEventListener('resize', checkSize);
-    }, []);
 
-    return (
-        <div className='flex w-full h-screen overflow-hidden bg-[#12112A] pb-20'>
-            <AnimatePresence mode="popLayout">
+  return (
+    <motion.div
+     initial= {{
+      opacity: 0
+    }}
+    transition={{
+      type: 'tween',
+      duration: 0.2
+    }}
+    animate={{
+      opacity: 1
+    }} 
+    exit={{
+      opacity:0
+    }}
+    className='text-pink flex-1 flex bg-[#110e1f] min-h-0 relative overflow-hidden border border-pink/10'>
+      <AnimatePresence>
+        {/* 1. SIDEBAR (User List / Chat List) */}
+        {(!isMobile || showList) && (
+          <motion.div
+            key='sidebar'
+            className="w-full sm:w-[clamp(250px,126.92px+19.23vw,300px)] bg-[#12112A] border-r border-pink/10 h-full  overflow-hidden shrink-0"
+            initial={isMobile ? { x: -300, opacity: 0 } : false}
+            animate={{ x: 0, opacity: 1 }}
+            exit={isMobile ? { x: -300, opacity: 0 } : undefined}
+            transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
+          >
+            <div className='p-4 border-b border-pink/10 flex justify-between items-center'>
+              <h3 className='font-bold text-lg'>Chats</h3>
+              {/* Dummy button check karne ke liye ke chat kaise khulegi mobile par */}
+              <button
+                onClick={() => setShowList(true)}
+                className='sm:hidden text-xs bg-primary px-2 py-1 rounded'
+              >
+                Open Chat demo
+              </button>
+            </div>
+            <div className='flex-1 overflow-y-auto p-2 scrollbar-none'>
+              {/* Sidebar content / Users list yahan aayegi */}
+              {messages.map(message => (
+                <p className='text-sm text-white/50 p-2 hover:bg-white/5 rounded cursor-pointer' onClick={() => setShowList(false)}>User 1</p>
+              ))}
 
-                {/* 1. SIDEBAR: Mobile par toggle hoga, desktop par hamesha dikhega */}
-                {(!isMobile || showList) && (
-                    <motion.div
-                        key='sidebar'
-                        className="w-full sm:w-[clamp(250px,126.92px+19.23vw,300px)] bg-[#12112A] border-r border-pink/10 h-full overflow-hidden shrink-0"
-                        initial={isMobile ? { x: -300, opacity: 0 } : false}
-                        animate={{ x: 0, opacity: 1 }}
-                        exit={isMobile ? { x: -300, opacity: 0 } : undefined}
-                        transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
-                    >
-                        {/* Wrapper to stop content squishing */}
-                        <div className="min-w-0 flex-1 sm:w-full h-full overflow-y-scroll scrollbar-none ">
-                            {name.map((na, index) => (
-                                <div
-                                    key={index}
-                                    className='flex gap-2 p-2 bg-pink/2 transition-colors border-b hover:bg-[#110E1F]/20 border-pink/10 items-center cursor-pointer'
-                                    onClick={() => isMobile && setShowList(false)} // Mobile par click karne se chat khulegi
-                                >
-                                    <span className='text-pink w-12 h-12 shrink-0 bg-[#270A48] flex items-center justify-center border-pink/10 border rounded-full'>{na.n[0]}</span>
-                                    <div className='min-w-0 flex-1'>
-                                        <div className='flex justify-between text-xs items-center text-primary'>
-                                            <span className='text-pink font-dosis text-lg'>{na.n}</span>
-                                            <span>{na.lastOnline}</span>
-                                        </div>
-                                        <p className='text-pink/40 text-xs font-sniglet truncate'>{na.lastMessage}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </motion.div>
-                )}
+            </div>
+          </motion.div>
+        )}
 
-                {/* 2. CHATBOX: Mobile par toggle hoga, desktop par hamesha dikhega */}
-                {(!isMobile || !showList) && (
-                    <motion.div
-                        key='chatbox'
-                        className='flex-1 h-full overflow-x-hidden bg-[#0e0d22]'
-                        initial={isMobile ? { x: 300, opacity: 0 } : false}
-                        animate={{ x: 0, opacity: 1 }}
-                        exit={isMobile ? { x: 300, opacity: 0 } : undefined}
-                        transition={{ type: 'tween', duration: 0.2, ease: 'easeInOut' }}
-                    >
-                        {/* Back button sirf mobile par show hoga */}
-                        {isMobile && (
-                            <button
-                                className='py-1 px-4 fixed text-lg text-pink font-dosis bg-pink/20 backdrop-blur-2xl border border-pink/10 rounded-full m-3 z-20'
-                                onClick={() => setShowList(true)}
-                            >
-                                Back
-                            </button>
-                        )}
-                        <div className=' h-full flex flex-col overflow-hidden relative'>
-                            <div className=' flex-1 p-4 overflow-y-scroll custom-scrollbar  '>
-                                <motion.div
-                                    className='h-fit pt-10 pb-15'
-                                >
-                                    <ChatMessage text={'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo delectus hic praesentium, officiis dicta voluptate laboriosam aperiam dignissimos ad accusamus? Nulla, ipsum dolorem. Obcaecati.'} isSender={true} />
-                                    <ChatMessage text={'Ling elit. Nemo delectum dolorem. Obcaecati.'} isSender={false} />
-                                    <ChatMessage text={'Ling elit. Nemo delectu'} isSender={true} />
-                                    <ChatMessage text={'Ling elit. Nemo delectufdhvjkfd fdjh skjrdhg dhfkdgjhdf  gsfhdgjk dfhjghdjkfgdfbhkhfbfdjkh  jdf jdfh kj fdj df gjkdfjgk sdjfkh jsdfhk kjdhbsdfj md '} isSender={false} />
-                                    <ChatMessage text={'Ling elit. Nemo delectufdhvjkfd fdjh skjrdhg dhfkdgjhdf  gsfhdgjk dfhjghdjkfgdfbhkhfbfdjkh  jdf jdfh kj fdj df gjkdfjgk sdjfkh jsdfhk kjdhbsdfj md '} isSender={false} senderName={'Oasis'} />
+        {/* 2. MAIN CHAT WINDOW */}
+        {(!isMobile || !showList) && (
+          <motion.div
+            key='chatbox'
+            className='flex-1 h-full flex-col flex overflow-x-hidden bg-[#0e0d22]'
+            initial={isMobile ? { x: 300, opacity: 0 } : false}
+            animate={{ x: 0, opacity: 1 }}
+            exit={isMobile ? { x: 300, opacity: 0 } : undefined}
+            transition={{ type: 'tween', duration: 0.2, ease: 'easeInOut' }}
+          >
+            {/* Chat Header */}
+            <div className='h-14 border-b border-pink/10 flex items-center px-4 gap-3 bg-[#140B2D]/50'>
+              {/* Mobile Back Button: Chat se wapas sidebar par jaane ke liye */}
+              <button
+                onClick={() => setShowList(true)}
+                className='sm:hidden p-2 hover:bg-white/10 rounded-full text-white'
+              >
+                <i className="fa-solid fa-arrow-left"></i>
+              </button>
+              <span className='font-semibold'>Active Chat</span>
+            </div>
 
-                                    <div key={'scrollToLastMessage'} ref={'scrollToLast'}></div>
-                                </motion.div>
+            {/* Chat Messages Area */}
+            <div className='flex-1 overflow-y-auto p-4 custom-scrollbar bg-red-400/5'>
+              {/* Messages content yahan aayega */}
+              <p className='text-sm text-white/60'>Select a chat or start messaging...</p>
+              <ChatMessage text={'dhcjsdcsjkjkd j jksv kjshdkfh vdfvd kfhvdkfs vsfjkd vjkdfvkj fjksdgh lsfhvd bd'} />
+              <ChatMessage text={'dhcjsdcsjkjkd j jksv kjshdkfh vdfvd kfhvdkfs vsfjkd vjkdfvkj fjksdgh lsfhvd bd'} />
+              <ChatMessage text={'dhcjsdcsjkjkd j jksv kjshdkfh vdfvd kfhvdkfs vsfjkd vjkdfvkj fjksdgh lsfhvd bd'} />
+              <ChatMessage text={'dhcjsdcsjkjkd j jksv kjshdkfh vdfvd kfhvdkfs vsfjkd vjkdfvkj fjksdgh lsfhvd bd'} />
+              <ChatMessage text={'dhcjsdcsjkjkd j jksv kjshdkfh vdfvd kfhvdkfs vsfjkd vjkdfvkj fjksdgh lsfhvd bd'} />
+              <ChatMessage text={'dhcjsdcsjkjkd j jksv kjshdkfh vdfvd kfhvdkfs vsfjkd vjkdfvkj fjksdgh lsfhvd bd'} />
+              <div ref={scrollToBottom}></div>
+            </div>
 
-                            </div>
-                            <ChatInput />
-                        </div>
+            {/* Chat Input Field */}
+            <div className='p-4 border-t border-pink/10 bg-[#140B2D]/30 flex gap-2'>
+              <input
+                type="text"
+                placeholder="Type a message..."
+                className='flex-1 bg-[#1a1530] border border-pink/20 rounded-xl px-4 py-2 text-sm outline-none focus:border-pink/50'
+              />
+              <button className='bg-primary px-4 py-2 rounded-xl text-sm font-semibold'>Send</button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-                    </motion.div>
-                )}
-
-            </AnimatePresence>
-        </div>
-    )
-}
+    </motion.div>
+  );
+};
 
 export default SoloChat;
