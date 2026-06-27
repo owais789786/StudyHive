@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-const invitationSchema = new mongoose.model({
-    serder: {
+const invitationSchema = new mongoose.Schema({
+    sender: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'User'

@@ -15,7 +15,7 @@ const roomSchema = new Schema({
         required: true
     },
     roomTags: {
-        type: [String],
+        type: String,
         default: [],
         required: true
     },
@@ -38,7 +38,7 @@ const roomSchema = new Schema({
         enum: ['private', 'public'],
         default: 'public'
     }
-})
+}, { timestamps: true })
 
 const Room = model('Room', roomSchema);
 module.exports = Room;

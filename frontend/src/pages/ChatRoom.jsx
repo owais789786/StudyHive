@@ -1,36 +1,50 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { io } from 'socket.io-client'
+import { io } from 'socket.io-client';
 
 import CreateRoom from '../components/CreateRoom';
 import SoloChat from '../components/SoloChat';
 import Rooms from '../components/Rooms';
+import Friends from '../components/Friends';
+import { UserContext } from '../context/UserContext';
 
 
 const ChatRoom = () => {
+    const { user } = useContext(UserContext);
+    const userId = user._id;
+
     const chatRoomOP = [
         { option: 'Rooms', id: 'rooms' },
         { option: 'Solo Chat', id: 'solochat' },
         { option: 'Create Room', id: 'createroom' },
+        { option: 'Friends', id: 'friends' }
 
     ];
     const [socket, setSocket] = useState(null)
     const [showOp, setShowOp] = useState('rooms');
+
     useEffect(() => {
+        if (!user) return;
         const newSocket = io(import.meta.env.VITE_API_URL);
         setSocket(newSocket);
+
         newSocket.on('connect', () => {
-            console.log('Connected to chat room with ID: ', newSocket.id)
+            console.log('Connected to chat room with ID: ', newSocket.id);
+            if (userId) {
+                newSocket.emit('join_user_room', userId);
+            }
         })
+
         return () => {
+            newSocket.off('connect');
             newSocket.disconnect();
             console.log("disconnected from chat room ")
         }
-    }, []);
+    }, [userId]);
 
     return (
 
-        <div className='border border-pink/20 rounded-2xl flex-1 flex flex-col'>
+        <div className='border border-pink/20 rounded-2xl flex-1 flex flex-col  overflow-hidden'>
             <div className='w-full  border-pink/20 border-b flex items-center px-2 justify-between text-pink'>
                 <div className='h-15'></div>
                 <ul className='xs:flex gap-2 hidden'>
@@ -58,9 +72,10 @@ const ChatRoom = () => {
                 </div>
             </div>
             <AnimatePresence>
-                {showOp == 'rooms' && <Rooms />}
-                {showOp == 'solochat' && <SoloChat />}
-                {showOp == 'createroom' && <CreateRoom />}
+                {showOp == 'rooms' && <Rooms socket={socket} />}
+                {showOp == 'solochat' && <SoloChat socket={socket} />}
+                {showOp == 'createroom' && <CreateRoom socket={socket} />}
+                {showOp == 'friends' && <Friends socket={socket} />}
             </AnimatePresence>
 
 

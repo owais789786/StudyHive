@@ -4,7 +4,8 @@ const jwt = require('jsonwebtoken');
 const logger = require('../utils/logger');
 
 const isAuthenticated = async (req, res, next) => {
-    const token = req.cookies.Token || req.headers.authorization?.split(" ")[1];   
+
+    const token = req.cookies.Token || req.headers.authorization?.split(" ")[1];
     if (!token) {
         logger.warn('⚠️ Auth attempt with no token');
         return res.status(401).json({
@@ -31,6 +32,7 @@ const isAuthenticated = async (req, res, next) => {
         }
         req.user = user;
         req.decodedData = decodedData;
+        console.log(decodedData)
         req.token = token
         next();
     } catch (error) {

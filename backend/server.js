@@ -4,6 +4,7 @@ const { createServer } = require('http');
 const app = require('./src/app');
 const connectDB = require('./src/config/db');
 const Message = require('./src/models/message.model');
+const socketEventHandler = require('./src/sockets/eventHandler.socket');
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -15,20 +16,12 @@ const io = new Server(httpServer, {
 
 io.on('connection', (socket) => {
     console.log('user connected:', socket.id);
+    
+    socketEventHandler(io, socket);
 
-    socket.on('send_solo_message', async (data) => {
-        try {
-            const newMessage = Message.create({
-                sender: data.sender,
-                receiver: data.receiver,
-                content: data.content,
-                messageType: data.messageType
-            })
-        } catch (error) {
-
-        }
+    socket.on('disconnect', () => {
+        console.log('User disconnected')
     })
-
 })
 
 connectDB.then(() => {
