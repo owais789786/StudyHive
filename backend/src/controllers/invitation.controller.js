@@ -3,20 +3,52 @@ const Invitation = require('../models/invitation.modle');
 
 const getAllUsers = async (req, res) => {
     const loggedInUserId = req.decodedData.id;
-    console.log(loggedInUserId)
+    console.log("Logged In User ID:", loggedInUserId);
+
     try {
-        const allUsers = await User.find({ _id: { $ne: loggedInUserId } }).select('name _id');
-        console.log('request qi ')
+        // Step 1: Woh saare invitations dhoondo jahan loggedInUser sender ya receiver ho
+        const existingInvitations = await Invitation.find({
+            $or: [
+                { sender: loggedInUserId },
+                { receiver: loggedInUserId }
+            ]
+        });
+
+        // Step 2: Un invitations se doosre users ki IDs nikal kar ek array banao
+        const excludedUserIds = [loggedInUserId]; // Pehle se hi loggedInUser ko list mein daal diya
+
+        existingInvitations.forEach(invite => {
+            // Agar mein sender hoon, toh receiver ko exclude karo
+            if (invite.sender.toString() === loggedInUserId) {
+                excludedUserIds.push(invite.receiver);
+            }
+            // Agar mein receiver hoon, toh sender ko exclude karo
+            else if (invite.receiver.toString() === loggedInUserId) {
+                excludedUserIds.push(invite.sender);
+            }
+        });
+
+        await Invitation.populate(existingInvitations, { path: 'sender receiver' });
+
+        // Step 3: User query mein $nin use karo taaki excludedUserIds wala koi bhi banda na aaye
+        const allUsers = await User.find({
+            _id: { $nin: excludedUserIds }
+        }).select('name _id');
+
+        console.log('Filtered users fetched successfully');
+
         return res.status(200).json({
-            message: 'Fetched all users',
+            message: 'Fetched all users except self and connected/invited users',
             success: true,
-            data: allUsers
-        })
+            data: { allUsers, invites: existingInvitations }
+        });
+
     } catch (error) {
-        res.status(500).json({
+        console.error("Error in getAllUsers:", error);
+        return res.status(500).json({
             message: 'Internal Server Error',
             success: false
-        })
+        });
     }
 }
 
@@ -26,7 +58,7 @@ const invitationSender = async (req, res) => {
         const { sender, receiver } = req.body;
         const isSenderExist = await User.findById(sender);
         const isReceiverExist = await User.findById(receiver);
-        
+
         if (!isSenderExist || !isReceiverExist) {
             console.log('1')
             return res.status(400).json({
