@@ -12,10 +12,8 @@ router.get('/me', isAuthenticated, authController);
 router.get('/logout', isAuthenticated, userController.logoutHandler);
 
 router.post('/room', isAuthenticated, createRoom);
-
 router.get('/friends', isAuthenticated, getAllUsers);
-router.post('/friends', isAuthenticated, invitationSender);
-router.patch('/friends', isAuthenticated, invitationAcceptor);
+
 
 
 module.exports = router;

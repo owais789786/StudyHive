@@ -89,7 +89,14 @@ const App = () => {
 
   return (
     <div><ErrorBoundary>
-      <Toaster position='top-right' />
+      <Toaster position="top-right"
+        toastOptions={{
+          style: {
+            background: '#110E1F',
+            color: '#fff',
+            border: '1px solid rgba(255,255,255,0.1)'
+          }
+        }} />
       <AnimatePresence>
         {loading && <Loading />}
       </AnimatePresence>
