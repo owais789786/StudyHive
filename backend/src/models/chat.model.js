@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const soloChatSchema = new mongoose.Schema({
+const chatSchema = new mongoose.Schema({
     chatId: {
         type: String,
         required: true,
@@ -25,3 +25,5 @@ const soloChatSchema = new mongoose.Schema({
     }
 
 }, { timestamps: true })
+
+module.exports = mongoose.model('Chat', chatSchema);

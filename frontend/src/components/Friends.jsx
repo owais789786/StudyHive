@@ -18,7 +18,9 @@ const Friends = ({ socket }) => {
             const sendData = { sender: user._id, receiver: payload };
             socket.emit('send_invite', sendData);
         } else if (signal === 'cancel_invite') { // Fixed typo: cancle_invite -> cancel_invite
-            socket.emit('cancel_invite', payload)
+            socket.emit('cancel_invite', payload);
+        } else if (signal === 'accept_invite') {
+            socket.emit('accept_invite', payload);
         }
     }
 
@@ -88,6 +90,11 @@ const Friends = ({ socket }) => {
                 console.log(data);
                 return [...prev, { _id: data.sender._id, name: data.sender.name }];
             })
+        });
+
+        socket.on('invite_accepted', (data) => {
+            setInvites(prev => prev.filter(inv => inv.receiver._id.toString() !== data.receiver._id.toString()));
+            showInfo(`${data.receiver.name} accepted your invite`);
         })
 
         return () => {
@@ -105,10 +112,10 @@ const Friends = ({ socket }) => {
             <motion.div initial={{ opacity: 0 }} transition={{ type: 'tween', duration: 0.2 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className='flex-1 flex flex-col sm:grid md:grid-cols-3 sm:grid-cols-5 p-2 gap-2' >
 
                 {/* Left Side: All Users */}
-                <div className={`border sm:bg-none transition-all ${!open && 'bg-linear-to-b from-transparent to-primary/20'} duration-300 min-h-15 ${open && 'flex-1'} relative border-pink/10 rounded-lg md:grid md:grid-cols-2 gap-2 md:col-span-2 sm:col-span-3 p-2`}>
+                <div className={`border sm:bg-none transition-all ${!open && 'bg-linear-to-b from-transparent to-primary/20 h-15'} duration-300 min-h-15 ${open && 'flex-1'} relative border-pink/10 rounded-lg md:grid md:grid-cols-2 gap-2 md:col-span-2 sm:col-span-3 p-2 overflow-x-scroll custom-scrollbar`}>
                     {allUsers.length > 0 ? (
                         allUsers.map(listedUser => (
-                            <div key={listedUser._id} className='w-full min-h-15 h-20 flex flex-row items-center justify-between p-2 bg-[#110E1F] rounded-lg shadow-[0_0_25px_-5px_rgba(140,48,229,0.2)]'>
+                            <div key={listedUser._id} className='w-full min-h-15 h-20 flex flex-row items-center justify-between p-2 bg-[#110E1F] rounded-lg shadow-[0_0_25px_-5px_rgba(140,48,229,0.4)]'>
                                 <div className='flex items-center gap-3'>
                                     <img src={img} alt="avatar" className='w-15 h-15 rounded-full object-cover' />
                                     <p className='text-pink font-dosis text-xl'>{listedUser.name}</p>
@@ -127,12 +134,12 @@ const Friends = ({ socket }) => {
                 </div>
 
                 {/* Right Side: Invites Box */}
-                <div className={`min-h-15 ${!open && 'flex-1'} ${open && 'bg-linear-to-b from-transparent to-primary/20'} sm:bg-none transition-all duration-300 border-pink/10 border rounded-lg md:col-span-1 sm:col-span-2 flex gap-2 p-2 flex-col`} >
+                <div className={`min-h-15 ${!open && 'flex-1'} ${open && 'bg-linear-to-b from-transparent to-primary/20 h-15'} sm:bg-none transition-all duration-300 border-pink/10 border rounded-lg md:col-span-1 sm:col-span-2 flex gap-2 p-2 flex-col overflow-y-scroll custom-scrollbar`} >
                     {invites.length > 0 ? (
                         invites.map(invite => (
                             // Safe checks aur key add ki gayi hy
                             invite.receiver?._id?.toString() === user?._id?.toString() ? (
-                                <div key={invite._id} className='w-full shadow-[0_0_25px_-5px_rgba(140,48,229,0.2)] rounded-lg bg-[#110E1F] min-h-15 p-3 flex flex-col gap-2'>
+                                <div key={invite._id} className='w-full shadow-[0_0_25px_-5px_rgba(140,48,229,0.4)] rounded-lg bg-[#110E1F] min-h-15 p-3 flex flex-col gap-2'>
                                     <div className='flex gap-3 items-center'>
                                         <img src={img} alt="sender" className='w-12 h-12 rounded-full object-cover' />
                                         <div className='flex flex-col'>
@@ -141,7 +148,9 @@ const Friends = ({ socket }) => {
                                         </div>
                                     </div>
                                     <div className='flex gap-2 mt-1'>
-                                        <button className='px-3 py-1 bg-[#7008E7] hover:opacity-80 text-white text-xs font-sniglet rounded transition-all cursor-pointer'>Accept</button>
+                                        <button className='px-3 py-1 bg-[#7008E7] hover:opacity-80 text-white text-xs font-sniglet rounded transition-all cursor-pointer'
+                                            onClick={() => handleInvite('accept_invite', invite)}
+                                        >Accept</button>
                                         <button className='px-3 py-1 bg-grey1 hover:opacity-80 text-white text-xs font-sniglet rounded transition-all cursor-pointer'>Reject</button>
                                     </div>
                                 </div>

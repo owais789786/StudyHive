@@ -7,9 +7,14 @@ const getAllUsers = async (req, res) => {
     try {
         // Step 1: Woh saare invitations dhoondo jahan loggedInUser connected hy
         const existingInvitations = await Invitation.find({
-            $or: [
-                { sender: loggedInUserId },
-                { receiver: loggedInUserId }
+            $and: [
+                {
+                    $or: [
+                        { sender: loggedInUserId },
+                        { receiver: loggedInUserId }
+                    ]
+                },
+                { status: { $ne: 'accepted' } } // Status 'accepted' nahi hona chahiye
             ]
         }).populate('sender receiver'); // Direct populate karein taaki data clear miley
 
