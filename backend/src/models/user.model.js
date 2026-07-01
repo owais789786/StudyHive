@@ -17,13 +17,17 @@ const userSchema = new mongoose.Schema({
         required: true,
         select: false
     },
+    profileImg: {
+        type: String,
+        default: 'https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_1280.png'
+    },
     status: {
         type: String,
         enum: ['active', 'banned', 'inactive'],
         default: 'active'
     }
 }, { timestamps: true });
- 
+
 userSchema.pre('save', async function () {
     if (!this.isModified('password')) return;
     this.password = await bcrypt.hash(this.password, 10);

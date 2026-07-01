@@ -37,7 +37,7 @@ export const UserProvider = ({ children }) => {
           setLoading(false);
         }, 800); // 800ms ka delay taake transition smooth lage
       }
-    };
+    }; 
 
     checkUserOrFetchData();
   }, []);

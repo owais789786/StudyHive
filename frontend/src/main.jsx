@@ -5,16 +5,19 @@ import { UserProvider } from './context/UserContext.jsx'
 
 import './index.css'
 import App from './App.jsx'
+import { SocketProvider } from './context/SocketContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
 
     <UserProvider>
-      <BrowserRouter>
+      <SocketProvider>
+        <BrowserRouter>
 
-        <App />
-        
-      </BrowserRouter>
+          <App />
+
+        </BrowserRouter>
+      </SocketProvider>
     </UserProvider>
 
   </StrictMode>,

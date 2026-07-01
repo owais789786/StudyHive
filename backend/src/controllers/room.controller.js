@@ -1,4 +1,5 @@
 const Room = require('../models/room.model');
+const Chat = require('../models/chat.model');
 
 const createRoom = async (req, res) => {
 
@@ -45,11 +46,36 @@ const getAllRooms = async (req, res) => {
         console.log(error.stack);
         res.status(500).json({
             success: false,
-            message : error.message
+            message: error.message
         })
 
     }
 
 }
 
-module.exports = { createRoom }
+const getAllChats = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const allChats = await Chat.find({ participants: userId }).populate('participants').lean();
+        const filteredChats = allChats.map(chat => {
+            const otherUserArray = chat.participants.filter(prev => prev._id.toString() !== userId.toString())
+            return {
+                ...chat,
+                participants: otherUserArray[0] || null
+            }
+        })
+        console.log(filteredChats);
+        return res.status(200).json({
+            message: 'Fetched all chats',
+            success: true,
+            data: filteredChats
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message: 'Internal Server Error',
+            success: false
+        })
+    }
+}
+
+module.exports = { createRoom, getAllChats }

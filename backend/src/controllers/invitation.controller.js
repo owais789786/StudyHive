@@ -1,20 +1,16 @@
 const User = require('../models/user.model');
 const Invitation = require('../models/invitation.modle');
 
+
 const getAllUsers = async (req, res) => {
     const loggedInUserId = req.decodedData.id;
 
     try {
         // Step 1: Woh saare invitations dhoondo jahan loggedInUser connected hy
         const existingInvitations = await Invitation.find({
-            $and: [
-                {
-                    $or: [
-                        { sender: loggedInUserId },
-                        { receiver: loggedInUserId }
-                    ]
-                },
-                { status: { $ne: 'accepted' } } // Status 'accepted' nahi hona chahiye
+            $or: [
+                { sender: loggedInUserId },
+                { receiver: loggedInUserId }
             ]
         }).populate('sender receiver'); // Direct populate karein taaki data clear miley
 
@@ -29,6 +25,8 @@ const getAllUsers = async (req, res) => {
             }
         });
 
+        const filteredInvitations = existingInvitations.filter(invite => invite.status !== 'accepted' && invite.status !== 'rejected');
+
         // Step 3: $nin use karein taaki list clean ho jaye
         const allUsers = await User.find({
             _id: { $nin: excludedUserIds }
@@ -37,7 +35,7 @@ const getAllUsers = async (req, res) => {
         return res.status(200).json({
             message: 'Fetched all users successfully',
             success: true,
-            data: { allUsers, invites: existingInvitations }
+            data: { allUsers, invites: filteredInvitations }
         });
 
     } catch (error) {
@@ -48,8 +46,6 @@ const getAllUsers = async (req, res) => {
         });
     }
 }
-
-
 
 
 

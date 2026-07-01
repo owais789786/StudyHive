@@ -3,8 +3,8 @@ const authController = require('../controllers/auth.controller');
 const userController = require('../controllers/user.controller');
 const isAuthenticated = require('../middlewares/auth.middleware');
 const { validateRegistration, validateLogin } = require('../middlewares/user.middleware');
-const { createRoom } = require('../controllers/room.controller');
-const { getAllUsers, invitationAcceptor, invitationSender, } = require('../controllers/invitation.controller');
+const { createRoom, getAllChats } = require('../controllers/room.controller');
+const { getAllUsers } = require('../controllers/invitation.controller');
 
 router.post('/signup', validateRegistration, userController.signupHanlder);
 router.post('/login', validateLogin, userController.loginHandler);
@@ -13,6 +13,7 @@ router.get('/logout', isAuthenticated, userController.logoutHandler);
 
 router.post('/room', isAuthenticated, createRoom);
 router.get('/friends', isAuthenticated, getAllUsers);
+router.get('/chatlist/:userId', isAuthenticated, getAllChats);
 
 
 

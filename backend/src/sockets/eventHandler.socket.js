@@ -1,11 +1,18 @@
 const Invitation = require('../models/invitation.modle');
 const Chat = require('../models/chat.model');
+const Message = require('../models/message.model');
 
 module.exports = (io, socket) => {
 
-    socket.on('join_user_room', (userId) => {
+    socket.on('join_user_room', async (userId) => {
         socket.join(userId);
 
+        const userChats = await Chat.find({ participants: userId });
+        if (userChats.length > 0) {
+            userChats.forEach(chat => {
+                socket.join(chat.chatId);
+            })
+        }
         console.log(`user ${userId} joined room.`);
     });
 
@@ -45,7 +52,7 @@ module.exports = (io, socket) => {
         const acceptedInvite = await Invitation.findByIdAndUpdate(
             data._id,
             { status: 'accepted' },
-            { new: true }
+            { returnDocument: 'after' }
         ).populate('sender receiver');
         const sortedIds = [data.sender._id.toString(), data.receiver._id.toString()].sort()
         const chatId = `${sortedIds[0]}_${sortedIds[1]}`;
@@ -60,6 +67,32 @@ module.exports = (io, socket) => {
         socket.join(chatId);
         io.to(data.sender._id.toString()).emit('invite_accepted', acceptedInvite)
 
+    })
+
+    socket.on('join_room', (data) => {
+        socket.join(data.chatId);
+    })
+
+    socket.on('reject_invite', async (data) => {
+        const rejectedInvite = await Invitation.findByIdAndUpdate(
+            data._id,
+            { status: 'rejected' },
+            { returnDocument: 'after' }
+        ).populate('sender receiver');
+        io.to(data.sender._id.toString()).emit('invite_rejected', rejectedInvite);
+    })
+
+    socket.on('start_chat_with', async (data) => {
+        const messages = await Message.find({ chatId: data.chatId }).populate('sender');
+        console.log(messages);
+        socket.emit('previous_messages', messages);
+    })
+
+    socket.on('send_message', async (data) => {
+        const newMessage = await Message.create(data);
+        newMessage.save();
+        console.log(newMessage);
+        io.to(data.chatId).emit('receive_message', data);
     })
 
 

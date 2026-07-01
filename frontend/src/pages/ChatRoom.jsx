@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { io } from 'socket.io-client';
 
 import CreateRoom from '../components/CreateRoom';
 import SoloChat from '../components/SoloChat';
@@ -20,27 +19,10 @@ const ChatRoom = () => {
         { option: 'Friends', id: 'friends' }
 
     ];
-    const [socket, setSocket] = useState(null)
+
     const [showOp, setShowOp] = useState('rooms');
 
-    useEffect(() => {
-        if (!user) return;
-        const newSocket = io(import.meta.env.VITE_API_URL);
-        setSocket(newSocket);
 
-        newSocket.on('connect', () => {
-            console.log('Connected to chat room with ID: ', newSocket.id);
-            if (userId) {
-                newSocket.emit('join_user_room', userId);
-            }
-        })
-
-        return () => {
-            newSocket.off('connect');
-            newSocket.disconnect();
-            console.log("disconnected from chat room ")
-        }
-    }, [userId]);
 
     return (
 
@@ -72,10 +54,10 @@ const ChatRoom = () => {
                 </div>
             </div>
             <AnimatePresence>
-                {showOp == 'rooms' && <Rooms socket={socket} />}
-                {showOp == 'solochat' && <SoloChat socket={socket} />}
-                {showOp == 'createroom' && <CreateRoom socket={socket} />}
-                {showOp == 'friends' && <Friends socket={socket} />}
+                {showOp == 'rooms' && <Rooms />}
+                {showOp == 'solochat' && <SoloChat />}
+                {showOp == 'createroom' && <CreateRoom />}
+                {showOp == 'friends' && <Friends />}
             </AnimatePresence>
 
 
